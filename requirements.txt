@@ -3,3 +3,4 @@ pymongo>=4.0
 pytz
 waitress
 whitenoise
+certifi
