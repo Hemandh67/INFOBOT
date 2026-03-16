@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>College Notice Board</h1>
+    </div>
+    <div class="col-md-4">
+        <form method="get" action="{% url 'home' %}">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Search notices..."
+                    value="{{ request.GET.search|default:'' }}">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="mb-4">
+    <a href="{% url 'home' %}" class="btn btn-outline-primary {% if not category %}active{% endif %}">All</a>
+    <a href="{% url 'home' %}?category=Exam"
+        class="btn btn-outline-primary {% if category == 'Exam' %}active{% endif %}">Exams</a>
+    <a href="{% url 'home' %}?category=Event"
+        class="btn btn-outline-primary {% if category == 'Event' %}active{% endif %}">Events</a>
+    <a href="{% url 'home' %}?category=Placement"
+        class="btn btn-outline-primary {% if category == 'Placement' %}active{% endif %}">Placements</a>
+    <a href="{% url 'home' %}?category=General"
+        class="btn btn-outline-primary {% if category == 'General' %}active{% endif %}">General</a>
+</div>
+
+<div class="row">
+    {% for notice in notices %}
+    <div class="col-md-6">
+        <div class="card notice-card">
+            <div class="card-body">
+                <span class="badge bg-info mb-2">{{ notice.category }}</span>
+                <h5 class="card-title"><a href="{% url 'notice_detail' notice.pk %}">{{ notice.title }}</a></h5>
+                <p class="card-text text-truncate">{{ notice.description|truncatewords:20 }}</p>
+                <div class="notice-meta">
+                    Posted on {{ notice.date_posted|date:"F d, Y" }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center">
+        <p>No notices found.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

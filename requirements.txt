@@ -1,0 +1,5 @@
+django>=5.0
+pymongo>=4.0
+pytz
+waitress
+whitenoise

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        {{ notice.category }} Notice
+    </div>
+    <div class="card-body">
+        <h2 class="card-title">{{ notice.title }}</h2>
+        <p class="text-muted">Posted by {{ notice.posted_by.username }} on {{ notice.date_posted|date:"F d, Y H:i" }}
+        </p>
+        <hr>
+        <p class="card-text" style="white-space: pre-wrap;">{{ notice.description }}</p>
+
+        <a href="{% url 'home' %}" class="btn btn-secondary mt-3">Back to Home</a>
+
+    </div>
+</div>
+{% endblock %}
