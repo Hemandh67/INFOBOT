@@ -4,6 +4,7 @@ Django settings for infobot project.
 
 from pathlib import Path
 import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -58,8 +59,16 @@ TEMPLATES = [
 WSGI_APPLICATION = 'infobot.wsgi.application'
 
 # Database
-# Use SQLite for Auth/Admin (Users) locally, but conditionally handle serverless
-if 'VERCEL' in os.environ:
+# Use Neon Postgres if DATABASE_URL is set, otherwise fallback to SQLite (local) or in-memory (Vercel without DB)
+if 'DATABASE_URL' in os.environ:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL'),
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
+elif 'VERCEL' in os.environ:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
