@@ -13,9 +13,7 @@ SECRET_KEY = 'django-insecure-test-key-for-infobot-project'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['infobot-chi.vercel.app', 'localhost', '127.0.0.1', '.vercel.app']
 # Application definition
 
 INSTALLED_APPS = [
