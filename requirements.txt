@@ -6,4 +6,4 @@ waitress
 whitenoise
 certifi
 dj-database-url
-psycopg2-binary
+psycopg[binary]
