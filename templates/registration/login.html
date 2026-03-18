@@ -1,32 +1,18 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<div class="row justify-content-center mt-5">
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header bg-primary text-white">Login</div>
-            <div class="card-body">
-                <form method="post">
-                    {% csrf_token %}
-                    {% if form.errors %}
-                    <div class="alert alert-danger" role="alert">
-                        Invalid username or password. Please try again.
-                    </div>
-                    {% endif %}
-                    <div class="mb-3">
-                        <label class="form-label">Username</label>
-                        <input type="text" name="username" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Password</label>
-                        <input type="password" name="password" class="form-control" required>
-                    </div>
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Login</button>
-                        <button type="reset" class="btn btn-secondary">Reset</button>
-                    </div>
-                </form>
-            </div>
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-md-5">
+        <div class="premium-card p-5">
+            <h2 class="text-center fw-bold mb-4" style="color: var(--text-main);">Welcome Back</h2>
+            <p class="text-center text-muted mb-4">Sign in to manage your notices</p>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-premium btn-lg">Sign In</button>
+                    <button type="reset" class="btn btn-light btn-lg border" style="color: var(--text-muted);">Reset</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
