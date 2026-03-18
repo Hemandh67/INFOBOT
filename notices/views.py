@@ -1,38 +1,23 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, Http404
 from django.contrib import messages
-from .utils import get_db_handle
-from bson.objectid import ObjectId
+from django.db.models import Q
+from .models import Notice
 import datetime
-
-# Get MongoDB handle
-db, client = get_db_handle()
-notices_collection = db['notices']
 
 @login_required
 def home(request):
     category = request.GET.get('category')
     search = request.GET.get('search')
     
-    filter_query = {}
+    notices = Notice.objects.all()
     if category:
-        filter_query['category'] = category
-    
+        notices = notices.filter(category=category)
     if search:
-        # Simple regex search
-        filter_query['$or'] = [
-            {'title': {'$regex': search, '$options': 'i'}},
-            {'description': {'$regex': search, '$options': 'i'}}
-        ]
+        notices = notices.filter(Q(title__icontains=search) | Q(description__icontains=search))
         
-    # MongoDB cursor to list
-    notices_cursor = notices_collection.find(filter_query).sort('date_posted', -1)
-    notices = []
-    
-    for n in notices_cursor:
-        n['pk'] = str(n['_id']) # Manual mapping of _id to pk for templates
-        notices.append(n)
+    notices = notices.order_by('-date_posted')
         
     context = {
         'notices': notices,
@@ -42,29 +27,12 @@ def home(request):
 
 @login_required
 def notice_detail(request, pk):
-    try:
-        notice = notices_collection.find_one({'_id': ObjectId(pk)})
-    except:
-        raise Http404("Invalid Notice ID")
-        
-    if not notice:
-        raise Http404("Notice not found")
-        
-    notice['pk'] = str(notice['_id'])
+    notice = get_object_or_404(Notice, pk=pk)
     return render(request, 'notices/detail.html', {'notice': notice})
 
 @login_required
 def dashboard(request):
-    # Admin/Faculty dashboard
-    # Filter by username (posted_by is stored as username string or ID)
-    # We'll store posted_by as username for simplicity in PyMongo
-    
-    notices_cursor = notices_collection.find({'posted_by': request.user.username}).sort('date_posted', -1)
-    notices = []
-    for n in notices_cursor:
-        n['pk'] = str(n['_id'])
-        notices.append(n)
-        
+    notices = Notice.objects.filter(posted_by=request.user.username).order_by('-date_posted')
     return render(request, 'notices/dashboard.html', {'notices': notices})
 
 @login_required
@@ -75,14 +43,12 @@ def add_notice(request):
         category = request.POST.get('category')
         
         if title and description and category:
-            notice_data = {
-                'title': title,
-                'description': description,
-                'category': category,
-                'posted_by': request.user.username,
-                'date_posted': datetime.datetime.now()
-            }
-            notices_collection.insert_one(notice_data)
+            Notice.objects.create(
+                title=title,
+                description=description,
+                category=category,
+                posted_by=request.user.username
+            )
             messages.success(request, 'Notice posted successfully!')
             return redirect('dashboard')
         else:
@@ -92,48 +58,31 @@ def add_notice(request):
 
 @login_required
 def edit_notice(request, pk):
-    try:
-        notice = notices_collection.find_one({'_id': ObjectId(pk)})
-    except:
-        messages.error(request, 'Invalid Notice ID')
-        return redirect('dashboard')
-
-    if not notice:
-        messages.error(request, 'Notice not found')
-        return redirect('dashboard')
+    notice = get_object_or_404(Notice, pk=pk)
     
-    # Check permissions
-    if notice['posted_by'] != request.user.username and not request.user.is_superuser:
+    if notice.posted_by != request.user.username and not request.user.is_superuser:
         messages.error(request, 'You do not have permission to edit this notice.')
         return redirect('dashboard')
         
     if request.method == 'POST':
-        update_data = {
-            'title': request.POST.get('title'),
-            'description': request.POST.get('description'),
-            'category': request.POST.get('category')
-        }
-        notices_collection.update_one({'_id': ObjectId(pk)}, {'$set': update_data})
+        notice.title = request.POST.get('title')
+        notice.description = request.POST.get('description')
+        notice.category = request.POST.get('category')
+        notice.save()
         messages.success(request, 'Notice updated successfully!')
         return redirect('dashboard')
         
-    notice['pk'] = str(notice['_id'])
     return render(request, 'notices/edit_notice.html', {'notice': notice})
 
 @login_required
 def delete_notice(request, pk):
-    try:
-        notice = notices_collection.find_one({'_id': ObjectId(pk)})
-    except:
-        messages.error(request, 'Invalid ID')
-        return redirect('dashboard')
-
-    if notice:
-        if notice['posted_by'] == request.user.username or request.user.is_superuser:
-            notices_collection.delete_one({'_id': ObjectId(pk)})
-            messages.success(request, 'Notice deleted successfully!')
-        else:
-            messages.error(request, 'Permission denied.')
+    notice = get_object_or_404(Notice, pk=pk)
+    
+    if notice.posted_by == request.user.username or request.user.is_superuser:
+        notice.delete()
+        messages.success(request, 'Notice deleted successfully!')
+    else:
+        messages.error(request, 'Permission denied.')
             
     return redirect('dashboard')
 

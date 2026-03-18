@@ -115,10 +115,7 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# MongoDB Configuration
-import os
-MONGO_URI = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/')
-MONGO_DB_NAME = os.environ.get('MONGO_DB_NAME', 'noticeboard_db')
+# removed MongoDB Configuration
 
 # Authentication Redirects
 LOGIN_REDIRECT_URL = 'dashboard'
