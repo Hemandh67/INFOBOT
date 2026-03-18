@@ -10,6 +10,7 @@ import datetime
 db, client = get_db_handle()
 notices_collection = db['notices']
 
+@login_required
 def home(request):
     category = request.GET.get('category')
     search = request.GET.get('search')
@@ -39,6 +40,7 @@ def home(request):
     }
     return render(request, 'notices/home.html', context)
 
+@login_required
 def notice_detail(request, pk):
     try:
         notice = notices_collection.find_one({'_id': ObjectId(pk)})
@@ -137,6 +139,7 @@ def delete_notice(request, pk):
 
 from .chatbot import get_chat_response
 
+@login_required
 def chatbot_api(request):
     query = request.GET.get('query', '')
     if query:

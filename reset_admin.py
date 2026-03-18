@@ -11,10 +11,10 @@ for u in users:
     print(f"User: {u.username}, is_superuser: {u.is_superuser}")
 
 if not User.objects.filter(username='admin').exists():
-    User.objects.create_superuser('admin', 'admin@example.com', 'admin')
-    print("Created superuser admin with password admin")
+    User.objects.create_superuser('admin', 'admin@example.com', 'adminhms')
+    print("Created superuser admin with password adminhms")
 else:
     u = User.objects.get(username='admin')
-    u.set_password('admin')
+    u.set_password('adminhms')
     u.save()
-    print("Reset password for superuser admin to 'admin'")
+    print("Reset password for superuser admin to 'adminhms'")
