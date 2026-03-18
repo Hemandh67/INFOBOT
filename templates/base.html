@@ -24,18 +24,19 @@
       </div>
       INFOBOT
     </a>
-    <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <div class="d-flex align-items-center order-lg-last">
+      <a class="btn btn-premium text-white px-2 px-sm-3 py-2 me-2 rounded-pill shadow-sm" href="#" id="chat-launcher" style="font-size: 0.9rem;">
+        <i class="bi bi-robot"></i> <span class="d-none d-sm-inline ms-1">Ask INFOBOT</span>
+      </a>
+      <button class="navbar-toggler border-0 shadow-none px-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="color: var(--primary);">
+        <i class="bi bi-list fs-2"></i>
+      </button>
+    </div>
+    
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto align-items-center gap-2">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-2 mt-3 mt-lg-0">
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'home' %}">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link btn-premium text-white px-3 py-2 ms-lg-2" href="#" id="chat-launcher">
-            <i class="bi bi-robot"></i> Ask INFOBOT
-          </a>
+          <a class="nav-link fw-bold" href="{% url 'home' %}">Home</a>
         </li>
         {% if user.is_authenticated %}
             <li class="nav-item">
