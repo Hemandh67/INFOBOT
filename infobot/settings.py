@@ -59,11 +59,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'infobot.wsgi.application'
 
 # Database
-# Use Neon Postgres if DATABASE_URL is set, otherwise fallback to SQLite (local) or in-memory (Vercel without DB)
-if 'DATABASE_URL' in os.environ:
+# Use Postgres if DATABASE_URL or POSTGRES_URL is set, otherwise fallback to SQLite (local) or in-memory (Vercel without DB)
+db_url = os.environ.get('DATABASE_URL') or os.environ.get('POSTGRES_URL')
+if db_url:
     DATABASES = {
         'default': dj_database_url.config(
-            default=os.environ.get('DATABASE_URL'),
+            default=db_url,
             conn_max_age=600,
             conn_health_checks=True,
         )
