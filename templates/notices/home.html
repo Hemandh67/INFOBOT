@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="text-center my-5">
-    <h1 class="fw-bold" style="font-size: 3rem; letter-spacing: -1.5px; color: var(--text-main);">Notice Board</h1>
-    <p class="text-muted lead mt-2">Stay updated with the latest college announcements</p>
+<div class="text-center hero-colorful">
+    <h1 class="fw-bold" style="font-size: 3.5rem; letter-spacing: -1.5px;">Notice Board</h1>
+    <p class="lead mt-3" style="font-size: 1.25rem;">Stay updated with the latest college announcements</p>
 </div>
 
 <div class="row mb-5">
@@ -28,7 +28,7 @@
     <div class="col-md-6 col-lg-4 mb-4">
         <div class="premium-card h-100 d-flex flex-column">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <span class="category-pill">{{ notice.category }}</span>
+                <span class="category-pill {% if notice.category == 'Exam' %}pill-exam{% elif notice.category == 'Event' %}pill-event{% elif notice.category == 'Placement' %}pill-placement{% else %}pill-general{% endif %}">{{ notice.category }}</span>
                 <small class="text-muted fw-bold">{{ notice.date_posted|date:"M d, Y" }}</small>
             </div>
             <h4 class="fw-bold mb-3" style="color: var(--text-main);">{{ notice.title }}</h4>
