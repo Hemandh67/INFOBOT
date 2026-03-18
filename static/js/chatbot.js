@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const chatCircle = document.getElementById('chat-circle');
+    const chatLauncher = document.getElementById('chat-launcher');
     const chatBox = document.querySelector('.chat-box');
     const chatBoxToggle = document.querySelector('.chat-box-toggle');
     const chatForm = document.getElementById('chat-form');
@@ -7,13 +7,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const chatLogs = document.querySelector('.chat-logs');
 
     // Toggle Chat
-    chatCircle.addEventListener('click', function () {
-        chatCircle.style.display = 'none';
-        chatBox.style.display = 'block';
-    });
+    if (chatLauncher) {
+        chatLauncher.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (chatBox.style.display === 'block') {
+                chatBox.style.display = 'none';
+            } else {
+                chatBox.style.display = 'block';
+            }
+        });
+    }
 
     chatBoxToggle.addEventListener('click', function () {
-        chatCircle.style.display = 'flex';
         chatBox.style.display = 'none';
     });
 
