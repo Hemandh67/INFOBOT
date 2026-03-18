@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse, Http404
 from django.contrib import messages
 from django.db.models import Q
 from .models import Notice
 import datetime
 
-@login_required
 def home(request):
     category = request.GET.get('category')
     search = request.GET.get('search')
@@ -25,17 +24,22 @@ def home(request):
     }
     return render(request, 'notices/home.html', context)
 
-@login_required
 def notice_detail(request, pk):
     notice = get_object_or_404(Notice, pk=pk)
     return render(request, 'notices/detail.html', {'notice': notice})
 
 @login_required
 def dashboard(request):
-    notices = Notice.objects.filter(posted_by=request.user.username).order_by('-date_posted')
+    if request.user.is_superuser or request.user.is_staff:
+        notices = Notice.objects.all().order_by('-date_posted')
+    else:
+        notices = Notice.objects.filter(posted_by=request.user.username).order_by('-date_posted')
     return render(request, 'notices/dashboard.html', {'notices': notices})
 
-@login_required
+def is_admin(user):
+    return user.is_authenticated and (user.is_superuser or user.is_staff)
+
+@user_passes_test(is_admin)
 def add_notice(request):
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -56,14 +60,10 @@ def add_notice(request):
             
     return render(request, 'notices/add_notice.html')
 
-@login_required
+@user_passes_test(is_admin)
 def edit_notice(request, pk):
     notice = get_object_or_404(Notice, pk=pk)
     
-    if notice.posted_by != request.user.username and not request.user.is_superuser:
-        messages.error(request, 'You do not have permission to edit this notice.')
-        return redirect('dashboard')
-        
     if request.method == 'POST':
         notice.title = request.POST.get('title')
         notice.description = request.POST.get('description')
@@ -74,21 +74,16 @@ def edit_notice(request, pk):
         
     return render(request, 'notices/edit_notice.html', {'notice': notice})
 
-@login_required
+@user_passes_test(is_admin)
 def delete_notice(request, pk):
     notice = get_object_or_404(Notice, pk=pk)
-    
-    if notice.posted_by == request.user.username or request.user.is_superuser:
-        notice.delete()
-        messages.success(request, 'Notice deleted successfully!')
-    else:
-        messages.error(request, 'Permission denied.')
+    notice.delete()
+    messages.success(request, 'Notice deleted successfully!')
             
     return redirect('dashboard')
 
 from .chatbot import get_chat_response
 
-@login_required
 def chatbot_api(request):
     query = request.GET.get('query', '')
     if query:
