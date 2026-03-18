@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="row mb-4">
-    <div class="col-md-8">
+    <div class="col-md-8 mb-3 mb-md-0">
         <h1>College Notice Board</h1>
     </div>
     <div class="col-md-4">
@@ -16,7 +16,7 @@
     </div>
 </div>
 
-<div class="mb-4">
+<div class="mb-4 d-flex flex-wrap gap-2">
     <a href="{% url 'home' %}" class="btn btn-outline-primary {% if not category %}active{% endif %}">All</a>
     <a href="{% url 'home' %}?category=Exam"
         class="btn btn-outline-primary {% if category == 'Exam' %}active{% endif %}">Exams</a>
