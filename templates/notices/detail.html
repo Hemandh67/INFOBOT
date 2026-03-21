@@ -12,6 +12,13 @@
         <hr>
         <p class="card-text" style="white-space: pre-wrap;">{{ notice.description }}</p>
 
+        {% if notice.file %}
+        <div class="mt-4 p-3 bg-light border rounded">
+            <strong><i class="bi bi-paperclip"></i> Attachment:</strong> 
+            <a href="{{ notice.file.url }}" target="_blank" class="btn btn-sm btn-outline-primary ms-2">View / Download File</a>
+        </div>
+        {% endif %}
+
         <a href="{% url 'home' %}" class="btn btn-secondary mt-3">Back to Home</a>
 
     </div>

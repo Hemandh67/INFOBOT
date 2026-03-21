@@ -51,6 +51,9 @@
             <li class="nav-item">
             <a class="nav-link fw-bold" href="{% url 'login' %}">Login</a>
             </li>
+            <li class="nav-item">
+            <a class="nav-link btn btn-sm btn-light text-primary rounded-pill px-3 ms-2 fw-bold" href="{% url 'register' %}">Register</a>
+            </li>
         {% endif %}
       </ul>
     </div>
@@ -72,12 +75,12 @@
 </div>
 
 <!-- Chatbot Implementation -->
-<div class="chat-box" style="display: none; position: fixed; bottom: 30px; right: 30px; width: 350px; z-index: 1050; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-lg); background: white; border: 1px solid var(--border-color);">
-    <div class="chat-box-header d-flex justify-content-between align-items-center p-3 text-white" style="background: linear-gradient(135deg, var(--primary), #6366f1);">
+<div class="chat-box" style="display: none; position: fixed; bottom: 30px; right: 30px; width: 350px; z-index: 1050; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.5);">
+    <div class="chat-box-header d-flex justify-content-between align-items-center p-3 text-white" style="background: linear-gradient(135deg, rgba(79, 70, 229, 0.85), rgba(99, 102, 241, 0.85)); border-bottom: 1px solid rgba(255,255,255,0.2);">
         <span class="fw-bold"><i class="bi bi-robot me-2"></i>INFOBOT Assistant</span>
         <span class="chat-box-toggle" style="cursor: pointer;"><i class="bi bi-x-lg"></i></span>
     </div>
-    <div class="chat-box-body p-3" style="height: 350px; overflow-y: auto; background: #f8fafc;">
+    <div class="chat-box-body p-3" style="height: 350px; overflow-y: auto; background: transparent;">
         <div class="chat-logs d-flex flex-column gap-3">
            <div class="chat-msg bot d-flex gap-2">
                <div class="text-white rounded-circle d-flex justify-content-center align-items-center" style="width: 35px; height: 35px; flex-shrink: 0; background: linear-gradient(135deg, var(--primary), #6366f1);">
@@ -89,7 +92,7 @@
            </div>
         </div>
     </div>
-    <div class="chat-input p-3 border-top bg-white">      
+    <div class="chat-input p-3 border-top" style="background: rgba(255,255,255,0.5);">      
         <form id="chat-form" class="d-flex gap-2">
             <input type="text" id="chat-input" class="form-control rounded-pill bg-light border-0 shadow-none px-3" placeholder="Type a message..." required autocomplete="off"/>
             <button type="submit" class="btn btn-premium rounded-circle d-flex justify-content-center align-items-center" style="width: 40px; height: 40px; flex-shrink: 0; padding: 0;"><i class="bi bi-send-fill" style="margin-left: -2px;"></i></button>

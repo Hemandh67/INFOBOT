@@ -3,9 +3,23 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse, Http404
 from django.contrib import messages
 from django.db.models import Q
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 from .models import Notice
 import datetime
 from django.contrib.auth import logout
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, 'Registration successful. Welcome!')
+            return redirect('home')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/register.html', {'form': form})
 
 def home(request):
     category = request.GET.get('category')
@@ -46,12 +60,14 @@ def add_notice(request):
         title = request.POST.get('title')
         description = request.POST.get('description')
         category = request.POST.get('category')
+        file = request.FILES.get('file')
         
         if title and description and category:
             Notice.objects.create(
                 title=title,
                 description=description,
                 category=category,
+                file=file,
                 posted_by=request.user.username
             )
             messages.success(request, 'Notice posted successfully!')
@@ -69,6 +85,8 @@ def edit_notice(request, pk):
         notice.title = request.POST.get('title')
         notice.description = request.POST.get('description')
         notice.category = request.POST.get('category')
+        if 'file' in request.FILES:
+            notice.file = request.FILES.get('file')
         notice.save()
         messages.success(request, 'Notice updated successfully!')
         return redirect('dashboard')

@@ -34,7 +34,12 @@
             <h4 class="fw-bold mb-3" style="color: var(--text-main);">{{ notice.title }}</h4>
             <p class="text-muted mb-4 flex-grow-1" style="line-height: 1.6;">{{ notice.description|truncatewords:20 }}</p>
             <div class="mt-auto pt-4 border-top d-flex justify-content-between align-items-center">
-                <span class="text-muted small fw-bold"><i class="bi bi-person-circle me-1"></i> {{ notice.posted_by|title }}</span>
+                <span class="text-muted small fw-bold">
+                    <i class="bi bi-person-circle me-1"></i> {{ notice.posted_by|title }}
+                    {% if notice.file %}
+                    <i class="bi bi-paperclip ms-2 text-primary" title="Has Attachment" style="font-size: 1.1rem;"></i>
+                    {% endif %}
+                </span>
                 <a href="{% url 'notice_detail' notice.pk %}" class="fw-bold text-decoration-none" style="color: var(--primary);">Read More &rarr;</a>
             </div>
         </div>
