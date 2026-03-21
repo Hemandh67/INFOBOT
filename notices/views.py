@@ -60,14 +60,12 @@ def add_notice(request):
         title = request.POST.get('title')
         description = request.POST.get('description')
         category = request.POST.get('category')
-        file = request.FILES.get('file')
         
         if title and description and category:
             Notice.objects.create(
                 title=title,
                 description=description,
                 category=category,
-                file=file,
                 posted_by=request.user.username
             )
             messages.success(request, 'Notice posted successfully!')
@@ -85,8 +83,6 @@ def edit_notice(request, pk):
         notice.title = request.POST.get('title')
         notice.description = request.POST.get('description')
         notice.category = request.POST.get('category')
-        if 'file' in request.FILES:
-            notice.file = request.FILES.get('file')
         notice.save()
         messages.success(request, 'Notice updated successfully!')
         return redirect('dashboard')
