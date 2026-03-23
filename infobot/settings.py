@@ -15,6 +15,7 @@ SECRET_KEY = 'django-insecure-test-key-for-infobot-project'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 ALLOWED_HOSTS = ['infobot-chi.vercel.app', 'localhost', '127.0.0.1', '.vercel.app']
+CSRF_TRUSTED_ORIGINS = ['https://infobot-chi.vercel.app', 'https://*.vercel.app']
 # Application definition
 
 INSTALLED_APPS = [
@@ -122,6 +123,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # removed MongoDB Configuration
 
 # Authentication Redirects
-LOGIN_REDIRECT_URL = 'dashboard'
+LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'

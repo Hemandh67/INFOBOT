@@ -102,9 +102,9 @@ from .chatbot import get_chat_response
 def chatbot_api(request):
     query = request.GET.get('query', '')
     if query:
-        results = get_chat_response(query)
-        return JsonResponse({'results': results, 'status': 'success'})
-    return JsonResponse({'results': [], 'status': 'no_query'})
+        response_data = get_chat_response(query)
+        return JsonResponse(response_data)
+    return JsonResponse({'message': 'No matching notices found.'})
 
 def custom_logout(request):
     logout(request)
